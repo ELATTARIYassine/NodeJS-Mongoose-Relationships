@@ -33,27 +33,75 @@ const createImage = function (tutorialId, image) {
   });
 };
 
+const createComment = function (tutorialId, comment) {
+  return db.Comment.create(comment).then((docComment) => {
+    console.log("\n>> Created Comment:\n", docComment);
+
+    return db.Tutorial.findByIdAndUpdate(
+      tutorialId,
+      { $push: { comments: docComment._id } },
+      { new: true, useFindAndModify: false }
+    );
+  });
+};
+
+// case 1 RUN CODE
+
+// const run = async function () {
+//   var tutorial = await createTutorial({
+//     title: "Tutorial #1",
+//     author: "bezkoder",
+//   });
+
+//   tutorial = await createImage(tutorial._id, {
+//     path: "sites/uploads/images/mongodb.png",
+//     url: "/images/mongodb.png",
+//     caption: "MongoDB Database",
+//     createdAt: Date.now(),
+//   });
+//   console.log("\n>> Tutorial:\n", tutorial);
+
+//   tutorial = await createImage(tutorial._id, {
+//     path: "sites/uploads/images/one-to-many.png",
+//     url: "/images/one-to-many.png",
+//     caption: "One to Many Relationship",
+//     createdAt: Date.now(),
+//   });
+//   console.log("\n>> Tutorial:\n", tutorial);
+// };
+
+//CASE 2 RUN CODE
 const run = async function () {
   var tutorial = await createTutorial({
     title: "Tutorial #1",
     author: "bezkoder",
   });
 
-  tutorial = await createImage(tutorial._id, {
-    path: "sites/uploads/images/mongodb.png",
-    url: "/images/mongodb.png",
-    caption: "MongoDB Database",
+  tutorial = await createComment(tutorial._id, {
+    username: "jack",
+    text: "This is a great tutorial.",
     createdAt: Date.now(),
   });
   console.log("\n>> Tutorial:\n", tutorial);
 
-  tutorial = await createImage(tutorial._id, {
-    path: "sites/uploads/images/one-to-many.png",
-    url: "/images/one-to-many.png",
-    caption: "One to Many Relationship",
+  tutorial = await createComment(tutorial._id, {
+    username: "mary",
+    text: "Thank you, it helps me alot.",
     createdAt: Date.now(),
   });
   console.log("\n>> Tutorial:\n", tutorial);
+};
+
+//case 2 function
+const getTutorialWithPopulate = function (id) {
+  return db.Tutorial.findById(id).populate("comments");
+};
+
+//Case 2 run code
+const runTogetDataWithTheRelation = async function () {
+  // add this
+  tutorial = await getTutorialWithPopulate("5faab9cb5d82260db091f4e3");
+  console.log("\n>> populated Tutorial:\n", tutorial);
 };
 
 mongoose
@@ -61,8 +109,9 @@ mongoose
     "mongodb+srv://erwinRare:987654321@cluster0.yc88o.mongodb.net/onetomany?retryWrites=true&w=majority"
   )
   .then(() => {
-    // run this
-    run();
+    // run this for the case 1
+    // run();
+    runTogetDataWithTheRelation();
   })
   .catch((err) => {
     console.log(err);

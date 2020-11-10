@@ -6,6 +6,12 @@ const Tutorial = mongoose.model(
     title: String,
     author: String,
     images: [],
+    comments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Comment",
+      },
+    ],
   })
 );
 
