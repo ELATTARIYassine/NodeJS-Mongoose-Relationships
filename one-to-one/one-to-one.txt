@@ -1,0 +1,2 @@
+=> Referencing or Embedding for One-to-One Relationships?
+the answer is that modeling One-to-One relationships with Embedded documents is the better choice.
