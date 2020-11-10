@@ -12,6 +12,10 @@ const Tutorial = mongoose.model(
         ref: "Comment",
       },
     ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
   })
 );
 
